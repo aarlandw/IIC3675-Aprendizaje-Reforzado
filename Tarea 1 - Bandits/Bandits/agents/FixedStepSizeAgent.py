@@ -7,7 +7,7 @@ class FixedStepSizeAgent(BaseAgent):
         self.num_of_actions = num_of_actions
         self.epsilon = epsilon
         self.alpha = alpha
-        self.action_counts = np.zeros(num_of_actions) 
+        self.q_values = np.zeros(num_of_actions)  
 
          
     def get_action(self) -> int:
