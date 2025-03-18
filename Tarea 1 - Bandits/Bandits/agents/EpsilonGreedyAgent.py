@@ -1,21 +1,20 @@
-from BaseAgent import BaseAgent
+from agents.BaseAgent import BaseAgent
 import numpy as np
 import random
 
 class EpsilonGreedyAgent(BaseAgent):
-    def __init__(self, num_of_actions: int, epsilon: float):
+    def __init__(self, num_of_actions: int, epsilon: float = 0.1):
         self.num_of_actions = num_of_actions
         self.epsilon = epsilon
-        
-        for i in range(num_of_actions):
-            self.q_values[i] = 0
-            self.action_counts[i] = 0
+        self.q_values = np.zeros(num_of_actions) 
+        self.action_counts = np.zeros(num_of_actions) 
+
          
     def get_action(self) -> int:
         if np.random.rand() < self.epsilon:
             return random.randrange(self.num_of_actions)
         else:
-            return self.q_values.index(max(self.q_values))
+            return np.argmax(self.q_values)
     
     
     def learn(self, action, reward) -> None:
