@@ -64,7 +64,7 @@ if __name__ == "__main__":
     for run_id in range(NUM_OF_RUNS):
         bandit = BanditEnv(seed=run_id)
         num_of_arms = bandit.action_space
-        agent = EpsilonGreedyAgent(num_of_arms)  # here you might change the agent that you want to use
+        agent = FixedStepSizeAgent(num_of_arms)  # here you might change the agent that you want to use
         best_action = bandit.best_action
         for _ in range(NUM_OF_STEPS):
             action = agent.get_action()
