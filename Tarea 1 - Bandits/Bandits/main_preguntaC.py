@@ -2,7 +2,9 @@ from BanditEnv import BanditEnv
 from BanditResults import BanditResults
 from agents.RandomAgent import RandomAgent
 from agents.EpsilonGreedyAgent import EpsilonGreedyAgent 
+from agents.FixedStepSizeAgent import FixedStepSizeAgent
 import matplotlib.pyplot as plt
+import numpy as np
 import os
 import csv
 
@@ -17,7 +19,7 @@ def show_results(bandit_results: type(BanditResults)) -> None:
    
 def write_results(bandit_results: type(BanditResults), filename: str) -> None: 
     avg_rewards = bandit_results.get_average_rewards()
-    optimal_action_percentage = bandit_results.get_optimal_action_percentage()
+    optimal_action_optimistica = bandit_results.get_optimal_action_percentage()
     
     file_exists = os.path.isfile(filename)
     
@@ -30,29 +32,24 @@ def write_results(bandit_results: type(BanditResults), filename: str) -> None:
         for step in range(NUM_OF_STEPS):
             writer.writerow([step+1, avg_rewards[step], optimal_action_percentage[step]])
 
-def plot_results(bandit_results: BanditResults,label) -> None:
-    average_rewards = bandit_results.get_average_rewards()
-    optimal_action_percentage = bandit_results.get_optimal_action_percentage()
+def plot_results(bandit_results_optimista, bandit_results_realista):
+    average_rewards_optimista = bandit_results_optimista.get_average_rewards()
+    average_rewards_realista = bandit_results_realista.get_average_rewards()
+    optimal_action_optimista = bandit_results_optimista.get_optimal_action_percentage()
+    optimal_action_realista  = bandit_results_realista.get_optimal_action_percentage()
 
-    plt.figure(figsize=(12, 6))
+    plt.figure(figsize=(10, 5))
 
-    # Gráfico de recompensa promedio
-    plt.subplot(1, 2, 1)
-    plt.plot(average_rewards, label)
+    # Graficar porcentaje de acciones óptimas
+    plt.plot(optimal_action_optimista, label="Optimista Q1=5 epsilon = 0", linestyle="dashed", color="blue")
+    plt.plot(optimal_action_realista, label=" Realista Q1=0 epsilon = 0.1", linestyle="dashed", color="gray")
+
     plt.xlabel("Pasos")
-    plt.ylabel("% Acción Óptima")
-    plt.title("Recompensa Promedio por Paso")
-    plt.legend()
-
-    # Gráfico de porcentaje de acciones óptimas
-    plt.subplot(1, 2, 2)
-    plt.plot(optimal_action_percentage, label)
-    plt.xlabel("Pasos")
-    plt.ylabel("% Acción Óptima")
+    plt.ylabel("% Accion optima")
     plt.title("% de Acciones Óptimas por Paso")
     plt.legend()
-
     plt.show()
+
 
 
 if __name__ == "__main__":
@@ -65,7 +62,7 @@ if __name__ == "__main__":
     for run_id in range(NUM_OF_RUNS):
         bandit = BanditEnv(seed=run_id)
         num_of_arms = bandit.action_space
-        agent = FixedStepSizeAgent(num_of_arms, alpha=0.1, epsilon=0.1)  # here you might change the agent that you want to use
+        agent = FixedStepSizeAgent(num_of_arms, alpha=0.1, epsilon=0)  # here you might change the agent that you want to use
         agent.q_values = np.full(num_of_arms, 5.0)
         best_action = bandit.best_action
         for _ in range(NUM_OF_STEPS):
@@ -91,6 +88,6 @@ if __name__ == "__main__":
             resultado_realista.add_result(reward, is_best_action)
         resultado_realista.save_current_run()
 
-    show_results(results)
-    write_results(results, "results.csv")
-    plot_results(results)
+ #   show_results(results)
+#    write_results(results, "results.csv")
+    plot_results(resultado_optimistico,resultado_realista)
