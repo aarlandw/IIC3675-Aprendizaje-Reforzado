@@ -2,7 +2,7 @@ from BanditEnv import BanditEnv
 from BanditResults import BanditResults
 from agents.RandomAgent import RandomAgent
 from agents.EpsilonGreedyAgent import EpsilonGreedyAgent 
-from agents.FixedStepSizeAgent import FixedStepSizeAgent
+from agents.GradientBanditAgent import GradientBanditAgent
 import matplotlib.pyplot as plt
 import numpy as np
 import os
@@ -32,17 +32,20 @@ def write_results(bandit_results: type(BanditResults), filename: str) -> None:
         for step in range(NUM_OF_STEPS):
             writer.writerow([step+1, avg_rewards[step], optimal_action_percentage[step]])
 
-def plot_results(bandit_results_optimista, bandit_results_realista):
-    average_rewards_optimista = bandit_results_optimista.get_average_rewards()
-    average_rewards_realista = bandit_results_realista.get_average_rewards()
-    optimal_action_optimista = bandit_results_optimista.get_optimal_action_percentage()
-    optimal_action_realista  = bandit_results_realista.get_optimal_action_percentage()
+def plot_results(resultado_01,resultado_04,resultado_01_no,resultado_04_no):
+
+    optimal_action_01 = resultado_01.get_optimal_action_percentage()
+    optimal_action_04  = resultado_04.get_optimal_action_percentage()
+    optimal_action_01_no = resultado_01_no.get_optimal_action_percentage()
+    optimal_action_04_no  = resultado_04_no.get_optimal_action_percentage()
 
     plt.figure(figsize=(10, 5))
 
     # Graficar porcentaje de acciones óptimas
-    plt.plot(optimal_action_optimista, label="Optimista Q1=5 epsilon = 0", linestyle="dashed", color="blue")
-    plt.plot(optimal_action_realista, label=" Realista Q1=0 epsilon = 0.1", linestyle="dashed", color="gray")
+    plt.plot(optimal_action_01, label="α = 0.1 con baseline", linestyle="dashed", color="blue")
+    plt.plot(optimal_action_04, label=" α = 0.4 con baselin", linestyle="dashed", color="brown")
+    plt.plot(optimal_action_01_no, label="α = 0.1 con baseline", linestyle="dashed", color="lightblue")
+    plt.plot(optimal_action_04_no, label=" α = 0.4 con baselin", linestyle="dashed", color="orange")
 
     plt.xlabel("Pasos")
     plt.ylabel("% Accion optima")
@@ -57,37 +60,65 @@ if __name__ == "__main__":
     NUM_OF_RUNS = 2000
     NUM_OF_STEPS = 1000
     
-    #inicicalizacion  optimistica
-    resultado_optimistico = BanditResults()
+    #alpha 0.1 baseline
+    resultado_01 = BanditResults()
     for run_id in range(NUM_OF_RUNS):
         bandit = BanditEnv(seed=run_id)
         num_of_arms = bandit.action_space
-        agent = FixedStepSizeAgent(num_of_arms, alpha=0.1, epsilon=0)  # here you might change the agent that you want to use
-        agent.q_values = np.full(num_of_arms, 5.0)
+        agent = GradientBanditAgent(num_of_arms, alpha=0.1)  # here you might change the agent that you want to use
         best_action = bandit.best_action
         for _ in range(NUM_OF_STEPS):
             action = agent.get_action()
             reward = bandit.step(action)
             agent.learn(action, reward)
             is_best_action = action == best_action
-            resultado_optimistico.add_result(reward, is_best_action)
-        resultado_optimistico.save_current_run()
-    # inicializacion realista 
-    resultado_realista = BanditResults()
+            resultado_01.add_result(reward, is_best_action)
+        resultado_01.save_current_run()
+    #alpha 0.4 baseline
+    resultado_04 = BanditResults()
     for run_id in range(NUM_OF_RUNS):
         bandit = BanditEnv(seed=run_id)
         num_of_arms = bandit.action_space
-        agent = FixedStepSizeAgent(num_of_arms, alpha=0.1, epsilon=0.1)  # here you might change the agent that you want to use
-        agent.q_values = np.zeros(num_of_arms)
+        agent = GradientBanditAgent(num_of_arms, alpha=0.4)  # here you might change the agent that you want to use
         best_action = bandit.best_action
         for _ in range(NUM_OF_STEPS):
             action = agent.get_action()
             reward = bandit.step(action)
             agent.learn(action, reward)
             is_best_action = action == best_action
-            resultado_realista.add_result(reward, is_best_action)
-        resultado_realista.save_current_run()
+            resultado_04.add_result(reward, is_best_action)
+        resultado_04.save_current_run()
+    #alpha 0.1 no baseline
+    resultado_01_no = BanditResults()
+    for run_id in range(NUM_OF_RUNS):
+        bandit = BanditEnv(seed=run_id)
+        num_of_arms = bandit.action_space
+        agent = GradientBanditAgent(num_of_arms, alpha=0.1)  # here you might change the agent that you want to use
+        agent.baseline = False
+        best_action = bandit.best_action
+        for _ in range(NUM_OF_STEPS):
+            action = agent.get_action()
+            reward = bandit.step(action)
+            agent.learn(action, reward)
+            is_best_action = action == best_action
+            resultado_01_no.add_result(reward, is_best_action)
+        resultado_01_no.save_current_run()
+    #alpha 0.4 no baseline
+    resultado_04_no = BanditResults()
+    for run_id in range(NUM_OF_RUNS):
+        bandit = BanditEnv(seed=run_id)
+        num_of_arms = bandit.action_space
+        agent = GradientBanditAgent(num_of_arms, alpha=0.1)  # here you might change the agent that you want to use
+        agent.baseline = False
+        best_action = bandit.best_action
+        for _ in range(NUM_OF_STEPS):
+            action = agent.get_action()
+            reward = bandit.step(action)
+            agent.learn(action, reward)
+            is_best_action = action == best_action
+            resultado_04_no.add_result(reward, is_best_action)
+        resultado_04_no.save_current_run()
 
  #   show_results(results)
 #    write_results(results, "results.csv")
-    plot_results(resultado_optimistico,resultado_realista)
+    plot_results(resultado_01,resultado_04,resultado_01_no,resultado_04_no)
