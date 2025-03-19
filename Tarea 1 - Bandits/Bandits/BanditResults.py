@@ -13,7 +13,7 @@ class BanditResults:
         self.__results.append(self.__current_run)
         self.__current_run = BanditRun()
 
-    def get_average_rewards(self) -> list[float]:
+    def get_average_rewards(self) :
         return self.__get_average_statistic("reward")
 
     def __get_average_statistic(self, target_statistic: str):
@@ -25,5 +25,5 @@ class BanditResults:
             average_statistic.append(sum(step_rewards) / num_of_runs)
         return average_statistic
 
-    def get_optimal_action_percentage(self) -> list[float]:
+    def get_optimal_action_percentage(self) :
         return self.__get_average_statistic("best_action")
