@@ -1,2 +1,3 @@
-__pyache__/
+**/__pyache__/
 *.pyc
+*.DS_Store
