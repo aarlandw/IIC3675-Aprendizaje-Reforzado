@@ -41,12 +41,12 @@ def plot_results(bandit_results_optimista, bandit_results_realista):
     plt.figure(figsize=(10, 5))
 
     # Graficar porcentaje de acciones óptimas
-    plt.plot(optimal_action_optimista, label="Optimista Q1=5 epsilon = 0", linestyle="dashed", color="blue")
-    plt.plot(optimal_action_realista, label=" Realista Q1=0 epsilon = 0.1", linestyle="dashed", color="gray")
+    plt.plot(optimal_action_optimista, label=r"Optimista $Q_1=5$, $\epsilon = 0$", linestyle="dashed", color="blue")
+    plt.plot(optimal_action_realista, label=r"Realista $Q_1=0$, $\epsilon= 0.1$", linestyle="dashed", color="gray")
 
     plt.xlabel("Pasos")
     plt.ylabel("% Accion optima")
-    plt.title("% de Acciones Óptimas por Paso")
+    plt.title(r"$\%$ de Acciones Óptimas por Paso")
     plt.legend()
     plt.show()
 
@@ -73,6 +73,7 @@ if __name__ == "__main__":
             resultado_optimistico.add_result(reward, is_best_action)
         resultado_optimistico.save_current_run()
     # inicializacion realista 
+    
     resultado_realista = BanditResults()
     for run_id in range(NUM_OF_RUNS):
         bandit = BanditEnv(seed=run_id)
