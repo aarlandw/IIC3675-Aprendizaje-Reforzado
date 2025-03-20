@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import csv
+from tqdm import tqdm
 
 
 def show_results(bandit_results: type(BanditResults)) -> None:
@@ -42,10 +43,10 @@ def plot_results(resultado_01,resultado_04,resultado_01_no,resultado_04_no):
     plt.figure(figsize=(10, 5))
 
     # Graficar porcentaje de acciones óptimas
-    plt.plot(optimal_action_01, label="α = 0.1 con baseline", linestyle="dashed", color="blue")
-    plt.plot(optimal_action_04, label=" α = 0.4 con baseline", linestyle="dashed", color="brown")
-    plt.plot(optimal_action_01_no, label="α = 0.1 sin baseline", linestyle="dashed", color="lightblue")
-    plt.plot(optimal_action_04_no, label=" α = 0.4 sin baseline", linestyle="dashed", color="orange")
+    plt.plot(optimal_action_01, label=r"$\alpha$ = 0.1 con baseline", linestyle="dashed", color="blue")
+    plt.plot(optimal_action_04, label=r"$\alpha$ = 0.4 con baseline", linestyle="dashed", color="brown")
+    plt.plot(optimal_action_01_no, label=r"$\alpha$ = 0.1 sin baseline", linestyle="dashed", color="lightblue")
+    plt.plot(optimal_action_04_no, label=r"$\alpha$ = 0.4 sin baseline", linestyle="dashed", color="orange")
 
     plt.xlabel("Pasos")
     plt.ylabel("% Accion optima")
@@ -62,7 +63,7 @@ if __name__ == "__main__":
     
     #alpha 0.1 baseline
     resultado_01 = BanditResults()
-    for run_id in range(NUM_OF_RUNS):
+    for run_id in tqdm(range(NUM_OF_RUNS)):
         bandit = BanditEnv(seed=run_id, mean=4.0)
         num_of_arms = bandit.action_space
         agent = GradientBanditAgent(num_of_arms, alpha=0.1)  # here you might change the agent that you want to use

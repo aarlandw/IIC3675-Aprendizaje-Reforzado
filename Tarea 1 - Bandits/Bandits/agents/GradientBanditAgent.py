@@ -29,6 +29,7 @@ class GradientBanditAgent(BaseAgent):
             else:
                 self.H[a] += self.alpha * (reward - self.average_reward) * (0 - probabilities_pi[a])
         self.step_count += 1
+        
         if self.baseline:
           self.average_reward += (reward - self.average_reward) / self.step_count
         else:
