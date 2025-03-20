@@ -43,9 +43,9 @@ def plot_results(resultado_01,resultado_04,resultado_01_no,resultado_04_no):
 
     # Graficar porcentaje de acciones óptimas
     plt.plot(optimal_action_01, label="α = 0.1 con baseline", linestyle="dashed", color="blue")
-    plt.plot(optimal_action_04, label=" α = 0.4 con baselin", linestyle="dashed", color="brown")
-    plt.plot(optimal_action_01_no, label="α = 0.1 con baseline", linestyle="dashed", color="lightblue")
-    plt.plot(optimal_action_04_no, label=" α = 0.4 con baselin", linestyle="dashed", color="orange")
+    plt.plot(optimal_action_04, label=" α = 0.4 con baseline", linestyle="dashed", color="brown")
+    plt.plot(optimal_action_01_no, label="α = 0.1 sin baseline", linestyle="dashed", color="lightblue")
+    plt.plot(optimal_action_04_no, label=" α = 0.4 sin baseline", linestyle="dashed", color="orange")
 
     plt.xlabel("Pasos")
     plt.ylabel("% Accion optima")
@@ -106,7 +106,7 @@ if __name__ == "__main__":
     #alpha 0.4 no baseline
     resultado_04_no = BanditResults()
     for run_id in range(NUM_OF_RUNS):
-        bandit = BanditEnv(seed=run_id)
+        bandit = BanditEnv(seed=run_id, mean=4.0)
         num_of_arms = bandit.action_space
         agent = GradientBanditAgent(num_of_arms, alpha=0.1)  # here you might change the agent that you want to use
         agent.baseline = False
