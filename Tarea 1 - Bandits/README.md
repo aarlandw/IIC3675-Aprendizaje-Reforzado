@@ -3,8 +3,6 @@
 The purpose of this assignment is to familiarize the student with the $\epsilon$-greedy algorithm widely used in reinforcement learning.
 The assignemnt description, and tasks can be read in this [PDF](/Tarea%201%20-%20Bandits/Enunciado_T1.pdf).
 
-
-
 ## Replicating and executing code
 
 By utilizing the `env.yaml` file in the repository, the exact same dependencies, and versions can be used to create the exact same environment for code executing
@@ -42,7 +40,7 @@ The results from the graphs were like expected. For the value of $\epsilon = 0$ 
 
 ### b) Simple Bandit Algorithm convergence analysis
 
-Figure 2.2 in *Reinforcement Learning: An Introduction* shows that even with an $\epsilon = 0.1$ the optimal action is only chosen about $80\%$ of the time. The reason being that the agent is unaware of the actual true value, or expected reward, or action $a$ at time $t$, denoted $q_*(a)$. However, the agent only has en estimate of $q_*(a)$, denoted $Q_{t}(a)$, which is not the true expected reward, but $Q_{t}(a)$ will asymptotically converge towards the true expected value. Written mathematically as follows:
+Figure 2.2 in *Reinforcement Learning: An Introduction* shows that even with an $\epsilon = 0.1$ the optimal action is only chosen about $80\%$ of the time. The reason being that the agent is unaware of the actual true value, or expected reward, or action $a$ at time $t$, denoted $q_*(a)$. However, the agent only has en estimate of $q_\*(a)$, denoted $Q_{t}(a)$, which is not the true expected reward, but $Q_{t}(a)$ will asymptotically converge towards the true expected value. Written mathematically as follows:
 
 $$
 Q_{t}(a) \rightarrow q_{*} (a) \text{ when } t \rightarrow \infty
@@ -84,7 +82,7 @@ Additionally, it is clear that agents without a baseline perform worse, achievin
 
 ### g) Effect of Using $\mu = 0$ Instead of $\mu = 4$
 
-In the previous experiment, the expected values of each arm were sampled from $q_*(a) \sim \mathcal{N}(4,1)$, meaning they were centered around $4$. If instead we had used $\mu = 0$ (i.e., $q_*(a) \sim \mathcal{N}(0,1)$), this would have had a significant effect on experiments without a baseline, while experiments with a baseline would remain largely unaffected.
+In the previous experiment, the expected values of each arm were sampled from $q_\*(a) \sim \mathcal{N}(4,1)$, meaning they were centered around $4$. If instead we had used $\mu = 0$ (i.e., $q_\*(a) \sim \mathcal{N}(0,1)$), this would have had a significant effect on experiments without a baseline, while experiments with a baseline would remain largely unaffected.
 
 When a baseline is used, the agent adjusts preferences relative to the mean reward. This means that whether $\mu = 0$ or $\mu = 4$, the agent still compares rewards relative to past experience, so the learning dynamics remain the same.
 
