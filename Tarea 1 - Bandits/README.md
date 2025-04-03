@@ -88,4 +88,4 @@ When a baseline is used, the agent adjusts preferences relative to the mean rewa
 
 However, in experiments without a baseline, changing $\mu$ affects performance. Since preference updates ($H(a)$) rely directly on received rewards, they do not naturally adjust to the mean reward distribution. If the expected rewards are centered at 0, the updates behave differently compared to when they are centered at 4, affecting how preferences develop over time.
 
-In summary **with a baseline** the results would remain unchanged, since preferences adjust relative to the running mean of rewards. However **Without a baseline** the results would change, as preference updates would be influenced by whether rewards are naturally centered around 0 or 4.
+In summary **with a baseline** the results would remain unchanged, since preferences adjust relative to the running mean of rewards. However **without a baseline** the results would change, as preference updates would be influenced by whether rewards are naturally centered around 0 or 4.
