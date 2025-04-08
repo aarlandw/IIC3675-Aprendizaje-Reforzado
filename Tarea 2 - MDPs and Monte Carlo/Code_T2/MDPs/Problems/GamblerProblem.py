@@ -9,13 +9,13 @@ class GamblerProblem(AbstractProblem):
         self.__prob_head = prob_head
 
     @property
-    def states(self) -> list[int]:
+    def states(self):
         return list(range(self.__max_state + 1))
 
     def get_initial_state(self) -> int:
         return (self.__max_state - self.__min_state) // 2
 
-    def get_available_actions(self, state: int) -> list[int]:
+    def get_available_actions(self, state: int) :
         if self.is_terminal(state):
             return []
         max_stake = min(state, 100 - state)
@@ -24,7 +24,7 @@ class GamblerProblem(AbstractProblem):
     def is_terminal(self, state: int) -> bool:
         return state in [self.__min_state, self.__max_state]
 
-    def get_transitions(self, state: int, action: int) -> list[(float, int, float)]:
+    def get_transitions(self, state: int, action: int) :
         if self.is_terminal(state):
             return [(1.0, (state, 0.0))]
         head_outcome = self.__get_head_outcome(state, action)

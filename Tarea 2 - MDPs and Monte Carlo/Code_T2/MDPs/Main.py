@@ -1,5 +1,6 @@
 import random
-
+import numpy as np
+import time
 from Problems.CookieProblem import CookieProblem
 from Problems.GridProblem import GridProblem
 from Problems.GamblerProblem import GamblerProblem
@@ -58,7 +59,61 @@ def play_cookie_problem():
     play(problem)
 
 
+
+
+def iterative_policy_evaluation(problem, gamma):
+    V = {s: 0 for s in problem.states}
+    theta = 1e-10
+    while True:
+        delta = 0
+        for s in problem.states:
+            if problem.is_terminal(s):
+                continue  # Mantener V(s) = 0 para estados terminales
+            
+            v_old = V[s]
+            total = 0
+            
+            available_actions = problem.get_available_actions(s)
+
+            pi = 1.0 / len(available_actions) #if available_actions else 0
+            
+            for a in available_actions:
+                transitions = problem.get_transitions(s, a)
+                for prob, s_next, r in transitions:
+                    total += pi * prob * (r + gamma * V[s_next])
+            
+            V[s] = total
+            delta = max(delta, abs(v_old - V[s]))
+        
+        if delta < theta:
+            break
+    
+    return V
+
 if __name__ == '__main__':
     # play_grid_problem()
-    play_cookie_problem()
+    #play_cookie_problem()
     # play_gambler_problem()
+    for size in range(3, 11):
+      problem = GridProblem(size)
+      start_time = time.time()
+      V = iterative_policy_evaluation(problem, gamma=1.0)
+      elapsed_time = time.time() - start_time
+      initial_state = problem.get_initial_state()
+      print(f"GridProblem {size}x{size}: V(s0) = {V[initial_state]:.3f}, Time = {elapsed_time:.3f}s")
+    
+    for size in range(3, 11):
+      problem = CookieProblem(size)
+      start_time = time.time()
+      V = iterative_policy_evaluation(problem, gamma=0.99)
+      elapsed_time = time.time() - start_time
+      initial_state = problem.get_initial_state()
+      print(f"CookieProblem {size}x{size}: V(s0) = {V[initial_state]:.3f}, Time = {elapsed_time:.3f}s")
+    
+    for ph in [0.25, 0.4, 0.55]:
+      problem = GamblerProblem(ph)
+      start_time = time.time()
+      V = iterative_policy_evaluation(problem, gamma=1.0)
+      elapsed_time = time.time() - start_time
+      initial_state = problem.get_initial_state()
+      print(f"GamblerProblem ph={ph}: V(s0) = {V[initial_state]:.3f}, Time = {elapsed_time:.3f}s")

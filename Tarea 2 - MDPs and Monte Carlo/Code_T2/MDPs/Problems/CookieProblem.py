@@ -9,7 +9,7 @@ class CookieProblem(AbstractProblem):
         self.__grid_locations = GridLocations(grid_size)
 
     @property
-    def states(self) -> list[(int, int)]:
+    def states(self):
         locations = self.__grid_locations.get_all_locations()
         states = []
         for agent_location in locations:
@@ -18,25 +18,25 @@ class CookieProblem(AbstractProblem):
                     states.append((agent_location, cookie_location))
         return states
 
-    def get_initial_state(self) -> (int, int):
+    def get_initial_state(self) :
         agent_location = self.__grid_locations.top_left_location
         cookie_location = self.__grid_locations.bottom_right_location
         return agent_location, cookie_location
 
-    def get_available_actions(self, state: (int, int)) -> list[str]:
+    def get_available_actions(self, state: (int, int)):
         return self.__grid_locations.get_actions()
 
     def is_terminal(self, state: (int, int)) -> bool:
         return False
 
-    def get_transitions(self, state: (int, int), action: str) -> list[(float, (int, int), float)]:
+    def get_transitions(self, state: (int, int), action: str):
         agent_location, cookie_location = state
         agent_next_location = self.__grid_locations.get_next_location(agent_location, action)
         if agent_next_location != cookie_location:
             return [(1.0, (agent_next_location, cookie_location), 0.0)]
         return self._get_outcomes_when_agent_reaches_the_cookie(agent_next_location)
 
-    def _get_outcomes_when_agent_reaches_the_cookie(self, agent_location: int) -> list[(float, (int, int), float)]:
+    def _get_outcomes_when_agent_reaches_the_cookie(self, agent_location: int):
         locations = self.__grid_locations.get_all_locations()
         prob = 1.0 / (len(locations) - 1)
         reward = 1.0

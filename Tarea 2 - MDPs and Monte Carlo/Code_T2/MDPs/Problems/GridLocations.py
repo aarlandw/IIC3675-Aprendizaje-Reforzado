@@ -32,7 +32,7 @@ class GridLocations:
     def bottom_right_location(self) -> int:
         return self.__location_ids[-1]
 
-    def get_actions(self) -> list[str]:
+    def get_actions(self) :#-> list[str]:
         return self.__actions
 
     def get_next_location(self, current_location: int, action: str) -> int:
