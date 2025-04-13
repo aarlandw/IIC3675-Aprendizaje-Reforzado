@@ -2,21 +2,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 
-# Ruta al archivo
-file_path = 'cliff_mc_rewards.csv'  # Cambia esto si tu archivo tiene otro nombre
-
-# Leer archivo CSV
+file_path = 'cliff_mc_rewards.csv' 
 all_rewards = []
 with open(file_path, 'r') as f:
     reader = csv.reader(f)
     for row in reader:
-        # Convertir todos los elementos de la fila a float
+
         rewards = [float(x) for x in row]
         all_rewards.append(rewards)
 
-# Parámetros
+
 num_runs = len(all_rewards)
-num_episodes = (len(all_rewards[0]) - 1) * 1000  # 200k si tienes 201 columnas
+num_episodes = (len(all_rewards[0]) - 1) * 1000 
 episode_points = list(range(0, num_episodes + 1, 1000))
 
 # Graficar

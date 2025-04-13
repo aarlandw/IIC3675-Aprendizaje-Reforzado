@@ -50,10 +50,10 @@ def mc_control(run, env, num_episodes=1e6, gamma=1.0, epsilon=0.1):
     # Inicialización sin defaultdict
     acciones_posibles = env.action_space
     n_actions = len(acciones_posibles)
-    Q = {}  # Diccionario para Q-values
-    N = {}  # Contador de visitas: N[state][action]
-    Returns = {}  # Diccionario para retornos acumulados
-    policy = {}  # Diccionario para la política ε-greedy
+    Q = {}
+    N = {}
+    Returns = {}
+    policy = {}
     eval_rewards = []
 
     for episode in range(1, int(num_episodes) + 1):
@@ -67,9 +67,9 @@ def mc_control(run, env, num_episodes=1e6, gamma=1.0, epsilon=0.1):
         done = False
 
         while not done:
-            # Inicializar política para el estado si no existe
+            # Inicializar política
             if state not in policy:
-                policy[state] = np.ones(n_actions) / n_actions  # Política uniforme inicial
+                policy[state] = np.ones(n_actions) / n_actions
             
             action = acciones_posibles[np.random.choice(n_actions, p=policy[state])]
             next_state, reward, done = env.step(action)
@@ -81,7 +81,7 @@ def mc_control(run, env, num_episodes=1e6, gamma=1.0, epsilon=0.1):
             state, action, reward = episode_history[t]
             G = gamma * G + reward
             
-            # Inicializar Q y N para (state, action) si no existen
+            # Inicializar Q y N 
             if state not in Q:
                 Q[state] = np.zeros(n_actions)
             if state not in N:
@@ -135,10 +135,10 @@ if __name__ == '__main__':
     for run in range(num_runs):
         print(f"Run {run+1}/{num_runs}")
         env = CliffEnv()
-        rewards,action_history = mc_control(run+1, env, num_episodes, gamma, epsilon)  # lista de retornos por cada 1000 episodios
+        rewards,action_history = mc_control(run+1, env, num_episodes, gamma, epsilon)
         all_rewards.append(rewards)
         all_run_history_action.append(action_history)
-        # Agrega una fila al archivo CSV con los rewards de esta corrida
+
         with open(filename, "a", newline="") as f:
             writer = csv.writer(f)
             writer.writerow(rewards)

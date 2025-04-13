@@ -69,7 +69,7 @@ def mc_control(run, env, num_episodes=1e6, gamma=1.0, epsilon=0.1):
         while not done:
             # Inicializar política para el estado si no existe
             if state not in policy:
-                policy[state] = np.ones(n_actions) / n_actions  # Política uniforme inicial
+                policy[state] = np.ones(n_actions) / n_actions 
             
             action = acciones_posibles[np.random.choice(n_actions, p=policy[state])]
             next_state, reward, done = env.step(action)
