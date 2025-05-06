@@ -1,9 +1,11 @@
 import random
 import numpy as np
 import time
+import matplotlib.pyplot as plt
 from Problems.CookieProblem import CookieProblem
 from Problems.GridProblem import GridProblem
 from Problems.GamblerProblem import GamblerProblem
+
 
 
 def get_action_from_user(actions):
@@ -137,43 +139,99 @@ def greedy_policy(problem, V, gamma):
     
     return policy
 
+def value_iteration(problem, gamma):
+    theta=1e-10
+    V = {s: 0 for s in problem.states}
+    
+    # Paso 1: Iteración de V
+    while True:
+        delta = 0
+        for s in problem.states:
+            if problem.is_terminal(s):
+                continue  
+            
+            v_old = V[s]
+            max_value = -float('inf')
+            
+            for a in problem.get_available_actions(s):
+                total = 0
+                transitions = problem.get_transitions(s, a)
+                for prob, s_next, r in transitions:
+                    total += prob * (r + gamma * V[s_next])
+                
+                if total > max_value:
+                    max_value = total
+            
+            V[s] = max_value
+            delta = max(delta, abs(v_old - V[s]))
+        
+        if delta < theta:
+            break 
+    
+    # Paso 2: Extraer la política óptima π*
+    policy = {}
+    for s in problem.states:
+        if problem.is_terminal(s):
+            policy[s] = None
+            continue
+        
+        best_action = None
+        max_value = -float('inf')
+        
+        for a in problem.get_available_actions(s):
+            total = 0
+            transitions = problem.get_transitions(s, a)
+            for prob, s_next, r in transitions:
+                total += prob * (r + gamma * V[s_next])
+            
+            if total > max_value:
+                max_value = total
+                best_action = a
+        
+        policy[s] = best_action
+    
+    return V, policy
+
+def get_optimal_actions(problem, V, gamma):
+    optimal_actions = {}
+    for s in problem.states:
+        if problem.is_terminal(s):
+            continue
+        
+        max_value = -float('inf')
+
+        
+        for a in problem.get_available_actions(s):
+            total = 0
+            transitions = problem.get_transitions(s, a)
+            for prob, s_next, r in transitions:
+                total += prob * (r + gamma * V[s_next])
+            
+            if round(total, 5) > round(max_value, 5):
+                max_value = total
+                optimal_actions[s] = [a]
+
+    
+    return optimal_actions
+
+
+
+def plot_optimal_actions(optimal_actions, ph):
+    states = list(optimal_actions.keys())
+    bets = [actions for actions in optimal_actions.values()]
+    
+    plt.figure(figsize=(10, 4))
+    plt.scatter(states, bets, color='b', s=5)
+    plt.xlabel('Capital  (s)')
+    plt.ylabel('Finan policy (a)')
+    plt.title(f'optimal actions for ph = {ph}')
+    plt.grid(True)
+    plt.show()
+
 if __name__ == '__main__':
-    # play_grid_problem()
-    #play_cookie_problem()
-    # play_gambler_problem()
-    for size in range(3, 11):
-      problem = GridProblem(size)
-      V_random = iterative_policy_evaluation(problem, gamma=1.0)
-      initial_state = problem.get_initial_state()
-      greedy = greedy_policy(problem, V_random, gamma=1.0)
-      V_greedy = evaluate_policy(problem, greedy, gamma=1.0)
-
-      greedy_greedy = greedy_policy(problem, V_greedy, gamma=1.0)
-      V_greedy_greedy = evaluate_policy(problem, greedy_greedy, gamma=1.0)     
-      print(f"GridProblem {size}x{size}: =  V_greedy(s0) ={V_greedy[initial_state]:.3f}  Optimal: {round(V_greedy_greedy[initial_state], 3)==round(V_greedy[initial_state], 3)}")
-
-    
-    for size in range(3, 11):
-      problem = CookieProblem(size)
-      V_random = iterative_policy_evaluation(problem, gamma=0.99)
-      initial_state = problem.get_initial_state()
-      greedy = greedy_policy(problem, V_random, gamma=0.99)
-      V_greedy = evaluate_policy(problem, greedy, gamma=0.99)
-
-      greedy_greedy = greedy_policy(problem, V_greedy, gamma=0.99)
-      V_greedy_greedy = evaluate_policy(problem, greedy_greedy, gamma=0.99)   
-
-      print(f"CookieProblem {size}x{size}: V_greedy(s0) = {V_greedy[initial_state]:.3f} Optimal: {round(V_greedy_greedy[initial_state], 3)==round(V_greedy[initial_state], 3)}")
-    
     for ph in [0.25, 0.4, 0.55]:
       problem = GamblerProblem(ph)
-      V_random = iterative_policy_evaluation(problem, gamma=1.0)
+      V,pi = value_iteration(problem, gamma=1)
       initial_state = problem.get_initial_state()
-      greedy = greedy_policy(problem, V_random, gamma=1.0)
-      V_greedy = evaluate_policy(problem, greedy, gamma=1.0)
-
-      greedy_greedy = greedy_policy(problem, V_greedy, gamma=1.0)
-      V_greedy_greedy = evaluate_policy(problem, greedy_greedy, gamma=1.0)   
-
-
-      print(f"GamblerProblem ph={ph}: V_greedy(s0) = {V_greedy[initial_state]:.3f}  Optimal: {round(V_greedy_greedy[initial_state], 3)==round(V_greedy[initial_state], 3)}")
+      optimal_actions = get_optimal_actions(problem, V, gamma=1)
+      plot_optimal_actions(optimal_actions,ph)
