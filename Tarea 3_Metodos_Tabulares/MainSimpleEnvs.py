@@ -31,5 +31,5 @@ def play_simple_env(simple_env):
 if __name__ == "__main__":
     env = CliffEnv()
     # env = EscapeRoomEnv()
-    play_simple_env(env)
+    #play_simple_env(env)
 
