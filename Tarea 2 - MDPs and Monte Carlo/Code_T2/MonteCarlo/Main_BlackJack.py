@@ -5,6 +5,7 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 import csv
 import random
+from tqdm import tqdm
 
 
 def get_action_from_user(actions):
@@ -44,7 +45,6 @@ def play_cliff():
     play(env)
 
 
-import numpy as np
 
 def mc_control(run, env, num_episodes=1e6, gamma=1.0, epsilon=0.1):
     # Inicialización 
@@ -57,9 +57,9 @@ def mc_control(run, env, num_episodes=1e6, gamma=1.0, epsilon=0.1):
     eval_rewards = []
     eval_points = list(range(0, int(num_episodes) + 1, 500000))
 
-    for episode in range(1, int(num_episodes) + 1):
-        if episode % 500000 == 0:
-            print(f"Episodio {episode}/{num_episodes}")
+    for episode in tqdm(range(1, int(num_episodes) + 1), desc="Episodios", unit="episodio"):
+        # if episode % 500000 == 0:
+            # print(f"Episodio {episode}/{num_episodes}")
 
         # Generar episodio bajo la política actual
         state = env.reset()
