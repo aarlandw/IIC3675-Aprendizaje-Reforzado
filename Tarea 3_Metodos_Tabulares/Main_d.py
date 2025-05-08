@@ -112,8 +112,12 @@ def dyna_q(env, alpha=0.5, gamma=1.0, epsilon=0.1, planning_steps=0, episodes=20
             s = tuple(env.reset())
             done = False
             total_reward = 0
-
+            avance = 0
             while not done:
+                avance += 1
+                if planning_steps == 10000 and avance%100==0:
+                    print(f"transcurieron {avance}")
+                
                 if random.random() < epsilon:
                     a_idx = np.random.randint(n_actions)
                 else:
@@ -127,7 +131,7 @@ def dyna_q(env, alpha=0.5, gamma=1.0, epsilon=0.1, planning_steps=0, episodes=20
                 Q[s][a_idx] += alpha * (r + gamma * np.max(Q[s_next]) - Q[s][a_idx])
                 model[(s, a_idx)] = (s_next, r)
 
-                for _ in range(planning_steps):
+                for i in range(planning_steps):
                     s_p, a_p = random.choice(list(model.keys()))
                     s_next_p, r_p = model[(s_p, a_p)]
                     Q[s_p][a_p] += alpha * (r_p + gamma * np.max(Q[s_next_p]) - Q[s_p][a_p])
@@ -149,13 +153,14 @@ if __name__ == "__main__":
     rmax_returns = []
 
     for i in tqdm(range(runs)):
+        rmax_ret = rmax(env, episodes=episodes, Rmax=1.0, k=1, gamma=1.0)
+        rmax_returns.append(np.mean(rmax_ret))
         for n in planning_steps_list:
             Q, returns = dyna_q(env, alpha=0.5, gamma=1.0, epsilon=0.1, planning_steps=n, episodes=episodes, runs=1)
             dyna_returns[n].append(np.mean(returns))
             print(f"dyna planning_steps = {n} : listo")
-
-        rmax_ret = rmax(env, episodes=episodes, Rmax=1.0, k=1, gamma=1.0)
-        rmax_returns.append(np.mean(rmax_ret))
+        print("finalizado dyna")
+        
 
     print("\nRetorno medio por episodio:")
     print("Método\t\tSteps de planeamiento\tRetorno promedio")
