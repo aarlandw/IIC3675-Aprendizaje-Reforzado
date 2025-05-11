@@ -112,11 +112,11 @@ def dyna_q(env, alpha=0.5, gamma=1.0, epsilon=0.1, planning_steps=0, episodes=20
             s = tuple(env.reset())
             done = False
             total_reward = 0
-            avance = 0
+            loop = 0
             while not done:
-                avance += 1
-                if planning_steps == 10000 and avance%100==0:
-                    print(f"transcurieron {avance}")
+                loop += 1
+                if planning_steps == 10000 and loop%100==0:
+                    print(f"loop numbre {loop}")
                 
                 if random.random() < epsilon:
                     a_idx = np.random.randint(n_actions)

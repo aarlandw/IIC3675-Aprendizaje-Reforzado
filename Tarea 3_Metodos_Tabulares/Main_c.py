@@ -70,61 +70,71 @@ def sarsa(env, num_episodes, alpha, gamma, epsilon):
     return returns
 
 def n_step_sarsa(env, num_episodes, alpha, gamma, epsilon, n=4):
-
+    Q = defaultdict(lambda: np.zeros(len(env.action_space)))
     returns = []
-    Q = {}
-    n_actions = len(env.action_space)
-    action_map = {i: a for i, a in enumerate(env.action_space)}
-
+    
     for ep in range(num_episodes):
-
+        # Buffers circulares (tamaño n+1)
+        S = [None] * (n + 1)
+        A = [None] * (n + 1)
+        R = [None] * (n + 1)
+        
+        # Inicialización del episodio
         s = env.reset()
-        done = False
-        total_reward = 0
-
-        S, A, R = [s], [], [0]  # R[0] = 0 por convención
+        S[0] = s
+        if np.random.rand() < epsilon:
+            A[0] = np.random.randint(len(env.action_space))
+        else:
+            A[0] = np.argmax(Q[s])
+        
         T = float('inf')
         t = 0
-
-        if s not in Q:
-            Q[s] = np.zeros(len(env.action_space))
-        if np.random.rand() < epsilon:
-            a_idx = np.random.randint(n_actions)
-        else:
-            a_idx = np.argmax(Q[s])
-        A.append(a_idx)
-
-        while not done:
+        total_reward = 0
+        
+        while True:
             if t < T:
-                action = action_map[A[t]]
+                # Ejecutar acción A[t % (n+1)]
+                action = env.action_space[A[t % (n + 1)]]
                 s_next, r, done = env.step(action)
-                S.append(s_next)
-                R.append(r)
                 total_reward += r
-                if s_next not in Q:
-                    Q[s_next] = np.zeros(len(env.action_space))
+                
+                # Almacenar en buffers circulares
+                S[(t + 1) % (n + 1)] = s_next
+                R[(t + 1) % (n + 1)] = r
+                
                 if done:
                     T = t + 1
                 else:
+                    # Seleccionar y almacenar siguiente acción
                     if np.random.rand() < epsilon:
-                        a_idx_next = np.random.randint(n_actions)  
+                        A[(t + 1) % (n + 1)] = np.random.randint(len(env.action_space))
                     else:
-                        a_idx_next = np.argmax(Q[s_next])
-                    A.append(a_idx_next)
-
+                        A[(t + 1) % (n + 1)] = np.argmax(Q[s_next])
+            
             tau = t - n + 1
             if tau >= 0:
-                G = sum([gamma**(i - tau - 1) * R[i] for i in range(tau + 1, min(tau + n , T))])
+                # Calcular retorno n-step
+                G = 0
+                for i in range(tau + 1, min(tau + n + 1, T + 1)):
+                    G += gamma**(i - tau - 1) * R[i % (n + 1)]
+                
                 if tau + n < T:
-                    G += gamma**n * Q[S[tau + n]][A[tau + n]]
-                Q[S[tau]][A[tau]] += alpha * (G - Q[S[tau]][A[tau]])
-
+                    s_tau_n = S[(tau + n) % (n + 1)]
+                    a_tau_n = A[(tau + n) % (n + 1)]
+                    G += gamma**n * Q[s_tau_n][a_tau_n]
+                
+                # Actualizar Q-value
+                s_tau = S[tau % (n + 1)]
+                a_tau = A[tau % (n + 1)]
+                Q[s_tau][a_tau] += alpha * (G - Q[s_tau][a_tau])
+            
             if tau == T - 1:
                 break
+                
             t += 1
-
+        
         returns.append(total_reward)
-
+    
     return returns
 
 def q_learning(env, num_episodes, alpha, gamma, epsilon):
