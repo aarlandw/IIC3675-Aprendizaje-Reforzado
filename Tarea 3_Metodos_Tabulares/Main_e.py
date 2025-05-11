@@ -3,6 +3,7 @@ from Environments.MultiGoalEnvs.RoomEnv import RoomEnv
 from collections import defaultdict
 import matplotlib.pyplot as plt
 from tqdm import tqdm
+import csv
 
 def initialize_q_values(env):
     """Inicializa Q-values en 1.0 como especifica el enunciado"""
@@ -227,6 +228,25 @@ if __name__ == "__main__":
     multi_q_result = np.mean(all_qmult, axis=0)
     multi_sarsa_result = np.mean(all_smult, axis=0)
 
+
+
+    # Guardar resultados en CSV
+    with open("largo_episodio_e.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        # Escribir encabezado
+        writer.writerow(["Episodio", "Q-learning", "Sarsa (1-step)", "Sarsa (8-step)", "Multi-goal Q-learning", "Multi-goal Sarsa"])
+        
+        # Escribir los valores por episodio
+        for i in range(params['num_episodes']):
+            writer.writerow([
+                i + 1,
+                q_learning_result[i],
+                sarsa_1_result[i],
+                sarsa_8_result[i],
+                multi_q_result[i],
+                multi_sarsa_result[i]
+            ])
+
     # Graficar resultados
     plt.figure(figsize=(12, 6))
     plt.plot(q_learning_result, label='Q-learning')
@@ -235,9 +255,10 @@ if __name__ == "__main__":
     plt.plot(multi_q_result, label='Multi-goal Q-learning')
     plt.plot(multi_sarsa_result, label='Multi-goal Sarsa')
 
-    plt.xlabel('Episodios')
-    plt.ylabel('Largo promedio de episodios')
-    plt.title('Comparación de algoritmos en RoomEnv (multi-objetivo)')
+    plt.xlabel('Episodes')
+    plt.ylabel('Average episode length')
+    plt.title('RoomEnv episode length comparison (Multi-goal)')
     plt.legend()
     plt.grid()
     plt.show()
+
