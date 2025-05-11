@@ -94,7 +94,7 @@ if __name__ == "__main__":
 
     # Promedio sobre las corridas
     avg_lengths = np.mean(episode_lengths_all, axis=0)
-
+    #hola   
     # Graficar resultado
     plt.plot(avg_lengths)
     plt.xlabel("x100 episodios")
