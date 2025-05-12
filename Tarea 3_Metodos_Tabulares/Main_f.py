@@ -50,7 +50,7 @@ def decentralized_qlearning(env, num_episodes=50000, alpha=0.1, gamma=0.95, epsi
             # Suavizado exponencial cada 100 episodios
             if episode % 100 == 0:
                 idx = episode // 100
-                episode_lengths[idx] = steps if idx == 0 else 0.99 * episode_lengths[idx - 1] + 0.01 * steps
+                episode_lengths[idx] = steps
 
         episode_lengths_all_runs[run] = episode_lengths
 
@@ -82,7 +82,7 @@ def centralized_qlearning(env, num_episodes, alpha, gamma, epsilon, num_runs):
 
             if episode % 100 == 0:
                 idx = episode // 100
-                episode_lengths[idx] = steps if idx == 0 else 0.99 * episode_lengths[idx - 1] + 0.01 * steps
+                episode_lengths[idx] = steps
 
         all_lengths[run] = episode_lengths
 
@@ -133,7 +133,7 @@ def competitive_qlearning(env, num_episodes=50000, alpha=0.1, gamma=0.95, epsilo
             # Suavizado exponencial cada 100 episodios
             if episode % 100 == 0:
                 idx = episode // 100
-                episode_lengths[idx] = steps if idx == 0 else 0.99 * episode_lengths[idx - 1] + 0.01 * steps
+                episode_lengths[idx] = steps
 
         episode_lengths_all_runs[run] = episode_lengths
 

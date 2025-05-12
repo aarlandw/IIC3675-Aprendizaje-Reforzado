@@ -27,7 +27,7 @@ def q_learning(env, alpha=0.1, gamma=0.99, epsilon=0.1, num_episodes=500):
     
     Q = initialize_q_values(env)
     
-    for episode in range(num_episodes):
+    for episode in tqdm(range(num_episodes)):
         state = env.reset()
         current_goal = state[1]  # El objetivo está en el estado
         done = False
@@ -59,7 +59,7 @@ def sarsa(env, alpha=0.1, gamma=0.99, epsilon=0.1, num_episodes=500, n_steps=1):
 
     Q = initialize_q_values(env)
     
-    for episode in range(num_episodes):
+    for episode in tqdm(range(num_episodes)):
         state = env.reset()
         current_goal = state[1]
         done = False
@@ -117,7 +117,7 @@ def multi_goal_q_learning(env, alpha=0.1, gamma=0.99, epsilon=0.1, num_episodes=
 
     Q = initialize_q_values(env)
     
-    for episode in range(num_episodes):
+    for episode in tqdm(range(num_episodes)):
         state = env.reset()
         current_goal = state[1]
         done = False
@@ -261,4 +261,3 @@ if __name__ == "__main__":
     plt.legend()
     plt.grid()
     plt.show()
-
