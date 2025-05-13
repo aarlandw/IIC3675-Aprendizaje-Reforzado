@@ -2,7 +2,7 @@ import numpy as np
 from Environments.MultiGoalEnvs.RoomEnv import RoomEnv
 from collections import defaultdict
 import matplotlib.pyplot as plt
-from tqdm import tqdm
+from tqdm import tqdm, trangera
 import csv
 
 def initialize_q_values(env):
@@ -300,7 +300,7 @@ if __name__ == "__main__":
 
     print("Ejecutando experimentos...")
     runs = 100
-    for i in tqdm(range(runs)):
+    for i in trange(runs):
         all_s.append(sarsa(env, **params))
         all_q.append( q_learning(env, **params))
         all_s8.append(n_step_sarsa(env, n=8, **params))

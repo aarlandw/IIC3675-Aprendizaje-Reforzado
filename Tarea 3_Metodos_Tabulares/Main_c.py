@@ -3,6 +3,7 @@ from Environments.SimpleEnvs.EscapeRoomEnv import EscapeRoomEnv
 import numpy as np
 from tqdm import tqdm
 import matplotlib.pyplot as plt
+from collections import defaultdict
 
 def show(env, current_state, reward=None):
     env.show()
