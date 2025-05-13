@@ -5,12 +5,8 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm, trangera
 import csv
 
-def initialize_q_values(env):
-    """Inicializa Q-values en 1.0 como especifica el enunciado"""
-    return defaultdict(lambda: np.ones(len(env.action_space)))
 
 def epsilon_greedy_action(Q, state, goal, action_space, epsilon):
-    """Selección de acción ε-greedy"""
     n_actions = len(env.action_space)
     if np.random.random() < epsilon:
         return np.random.randint(n_actions)
@@ -20,12 +16,11 @@ def epsilon_greedy_action(Q, state, goal, action_space, epsilon):
 ## Versiones estándar (sin multi-goal)
 
 def q_learning(env, alpha=0.1, gamma=0.99, epsilon=0.1, num_episodes=500):
-    """Q-learning estándar para multi-objetivo (un solo run)"""
     episode_lengths = np.zeros(num_episodes)
     n_actions = len(env.action_space)
     action_map = {i: a for i, a in enumerate(env.action_space)}
     
-    Q = initialize_q_values(env)
+    Q = defaultdict(lambda: np.ones(len(env.action_space)))
     
     for episode in range(num_episodes):
         state = env.reset()
@@ -51,11 +46,8 @@ def q_learning(env, alpha=0.1, gamma=0.99, epsilon=0.1, num_episodes=500):
 
     return episode_lengths
 def sarsa(env, num_episodes, alpha=0.1, gamma=0.99, epsilon=0.1):
-    """
-    SARSA estándar que solo actualiza los Q-values para el goal actual del episodio.
-    No realiza actualizaciones multi-goal.
-    """
-    Q = defaultdict(lambda: np.ones(len(env.action_space)))  # Inicialización con 1s
+
+    Q = defaultdict(lambda: np.ones(len(env.action_space)))  
     episode_lengths = []
     action_list = list(env.action_space)
     
@@ -114,7 +106,7 @@ def n_step_sarsa(env, num_episodes, alpha, gamma, epsilon, n=8):
     episode_lengths = []
     
     for episode in range(num_episodes):
-        # Buffers circulares para n-step
+        
         S = [None] * (n + 1)  
         A = [None] * (n + 1) 
         R = [None] * (n + 1)  
@@ -182,6 +174,8 @@ def n_step_sarsa(env, num_episodes, alpha, gamma, epsilon, n=8):
         episode_lengths.append(steps)
     
     return np.array(episode_lengths)
+
+    
 ## Versiones multi-goal
 
 def multi_goal_q_learning(env, alpha=0.1, gamma=0.99, epsilon=0.1, num_episodes=500):
@@ -190,7 +184,7 @@ def multi_goal_q_learning(env, alpha=0.1, gamma=0.99, epsilon=0.1, num_episodes=
     n_actions = len(env.action_space)
     action_map = {i: a for i, a in enumerate(env.action_space)}  
 
-    Q = initialize_q_values(env)
+    Q = defaultdict(lambda: np.ones(len(env.action_space)))
     
     for episode in range(num_episodes):
         state = env.reset()
@@ -218,19 +212,18 @@ def multi_goal_q_learning(env, alpha=0.1, gamma=0.99, epsilon=0.1, num_episodes=
     return episode_lengths
 
 def multi_goal_sarsa(env, alpha=0.1, gamma=0.99, epsilon=0.1, num_episodes=500):
-    """SARSA que maneja múltiples goals, actualizando Q-values para todos los goals en cada paso"""
-    Q = defaultdict(lambda: np.ones(len(env.action_space)))  # Inicialización con 1s
+    Q = defaultdict(lambda: np.ones(len(env.action_space)))  
     episode_lengths = []
     n_actions = len(env.action_space)
     action_map = {i: a for i, a in enumerate(env.action_space)}
     
     for episode in range(num_episodes):
         state = env.reset()
-        current_goal = state[1]  # Asumimos que el goal está en state[1]
+        current_goal = state[1]  
         done = False
         steps = 0
         
-        # Selección acción inicial ε-greedy para el goal actual
+        
         if np.random.rand() < epsilon:
             a_idx = np.random.randint(n_actions)
         else:
