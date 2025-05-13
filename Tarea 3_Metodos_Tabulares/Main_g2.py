@@ -1,4 +1,5 @@
 from Environments.PartiallyObservableEnvs.InvisibleDoorEnv import InvisibleDoorEnv
+from MemoryWrappers.KOrderMemory import KOrderMemory
 from collections import defaultdict
 import numpy as np
 from tqdm import tqdm
@@ -8,7 +9,6 @@ import csv
 def q_learning_partial_obs(env, num_episodes, alpha=0.1, gamma=0.99, epsilon=0.01):
     Q = defaultdict(lambda: np.ones(len(env.action_space)))
     episode_lengths = []
-    
     for _ in tqdm(range(num_episodes), desc="q_leurning"):
         s = env.reset()
         done = False
@@ -38,7 +38,6 @@ def q_learning_partial_obs(env, num_episodes, alpha=0.1, gamma=0.99, epsilon=0.0
     return episode_lengths
 
 def sarsa_partial_obs(env, num_episodes, alpha=0.1, gamma=0.99, epsilon=0.01):
-    """SARSA estándar para observación parcial"""
     Q = defaultdict(lambda: np.ones(len(env.action_space)))
     episode_lengths = []
     
@@ -84,9 +83,10 @@ def n_step_sarsa_partial_obs(env, num_episodes, alpha=0.1, gamma=0.99, epsilon=0
     Q = defaultdict(lambda: np.ones(len(env.action_space)))
     episode_lengths = []
     for _ in tqdm(range(num_episodes), desc="n_step_sarsa"):
-        O = [None] * (n + 1) 
-        A = [None] * (n + 1)  
-        R = [None] * (n + 1) 
+
+        O = [None] * (n + 1)  
+        A = [None] * (n + 1) 
+        R = [None] * (n + 1)  
         
         # Inicialización
         obs = env.reset()
@@ -145,7 +145,9 @@ def n_step_sarsa_partial_obs(env, num_episodes, alpha=0.1, gamma=0.99, epsilon=0
 
 if __name__ == "__main__":
     # Configuracion del experimento
-    env = InvisibleDoorEnv()
+    memory_size = 2
+    base_env = InvisibleDoorEnv()
+    env = KOrderMemory(base_env, memory_size)
     num_runs = 30
     num_episodes = 1000
     alpha = 0.1
@@ -184,7 +186,7 @@ if __name__ == "__main__":
     s16_avg = np.mean(results['16-step SARSA'], axis=0)
     
     # Guardar resultados en CSV con el nombre especificado
-    filename = "largo_episodios_g1.csv"
+    filename = "largo_episodios_g2.csv"
     
     with open(filename, 'w', newline='') as csvfile:
         fieldnames = ['Episodio', 'Q_learning', 'SARSA', '16_step_SARSA']
@@ -208,7 +210,7 @@ if __name__ == "__main__":
     plt.plot(s16_avg, label="16-step SARSA")
     plt.xlabel("Episodios")
     plt.ylabel("Largo promedio del episodio")
-    plt.title("Comparación de algoritmos en InvisibleDoorEnv (observación parcial)")
+    plt.title("Comparación de 2-order memory algoritmos en InvisibleDoorEnv (observación parcial)")
     plt.legend()
     plt.grid()
     plt.show()
@@ -223,3 +225,9 @@ if __name__ == "__main__":
     plt.legend()
     plt.grid()
     plt.show()
+    
+    # Análisis de convergencia
+    print("\nLargo promedio de episodios (últimos 100 episodios):")
+    print(f"Q-learning: {np.mean(q_avg[-100:]):.1f}")
+    print(f"SARSA: {np.mean(s_avg[-100:]):.1f}")
+    print(f"16-step SARSA: {np.mean(s16_avg[-100:]):.1f}")

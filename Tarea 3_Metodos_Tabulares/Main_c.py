@@ -98,14 +98,14 @@ def n_step_sarsa(env, num_episodes, alpha, gamma, epsilon, n=4):
                 s_next, r, done = env.step(action)
                 total_reward += r
                 
-                # Almacenar en buffers circulares
+             
                 S[(t + 1) % (n + 1)] = s_next
                 R[(t + 1) % (n + 1)] = r
                 
                 if done:
                     T = t + 1
                 else:
-                    # Seleccionar y almacenar siguiente acción
+    
                     if np.random.rand() < epsilon:
                         A[(t + 1) % (n + 1)] = np.random.randint(len(env.action_space))
                     else:
@@ -164,7 +164,7 @@ def q_learning(env, num_episodes, alpha, gamma, epsilon):
             if s_next not in Q:
                 Q[s_next] = np.zeros(len(env.action_space))
 
-            best_next = np.max(Q[s_next])
+            
             Q[s][a_idx] += alpha * (r + gamma * np.max(Q[s_next]) - Q[s][a_idx])
 
             s = s_next

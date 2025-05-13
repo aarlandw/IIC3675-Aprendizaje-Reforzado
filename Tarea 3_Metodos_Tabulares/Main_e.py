@@ -5,12 +5,10 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 import csv
 
-def initialize_q_values(env):
-    """Inicializa Q-values en 1.0 como especifica el enunciado"""
-    return defaultdict(lambda: np.ones(len(env.action_space)))
+
 
 def epsilon_greedy_action(Q, state, goal, action_space, epsilon):
-    """Selección de acción ε-greedy"""
+
     n_actions = len(env.action_space)
     if np.random.random() < epsilon:
         return np.random.randint(n_actions)
@@ -20,12 +18,12 @@ def epsilon_greedy_action(Q, state, goal, action_space, epsilon):
 ## Versiones estándar (sin multi-goal)
 
 def q_learning(env, alpha=0.1, gamma=0.99, epsilon=0.1, num_episodes=500):
-    """Q-learning estándar para multi-objetivo (un solo run)"""
+
     episode_lengths = np.zeros(num_episodes)
     n_actions = len(env.action_space)
     action_map = {i: a for i, a in enumerate(env.action_space)}
     
-    Q = initialize_q_values(env)
+    Q = defaultdict(lambda: np.ones(len(env.action_space)))
     
     for episode in tqdm(range(num_episodes)):
         state = env.reset()
@@ -52,12 +50,12 @@ def q_learning(env, alpha=0.1, gamma=0.99, epsilon=0.1, num_episodes=500):
     return episode_lengths
 
 def sarsa(env, alpha=0.1, gamma=0.99, epsilon=0.1, num_episodes=500, n_steps=1):
-    """Sarsa estándar (con n-step) para multi-objetivo (un solo run)"""
+   
     episode_lengths = np.zeros(num_episodes)
     n_actions = len(env.action_space)
     action_map = {i: a for i, a in enumerate(env.action_space)}
 
-    Q = initialize_q_values(env)
+    Q = defaultdict(lambda: np.ones(len(env.action_space)))
     
     for episode in tqdm(range(num_episodes)):
         state = env.reset()
@@ -110,12 +108,12 @@ def sarsa(env, alpha=0.1, gamma=0.99, epsilon=0.1, num_episodes=500, n_steps=1):
 ## Versiones multi-goal
 
 def multi_goal_q_learning(env, alpha=0.1, gamma=0.99, epsilon=0.1, num_episodes=500):
-    """Q-learning con actualización multi-goal (solo un run)"""
+
     episode_lengths = np.zeros(num_episodes)
     n_actions = len(env.action_space)
     action_map = {i: a for i, a in enumerate(env.action_space)}  
 
-    Q = initialize_q_values(env)
+    Q = defaultdict(lambda: np.ones(len(env.action_space)))
     
     for episode in tqdm(range(num_episodes)):
         state = env.reset()
@@ -143,7 +141,7 @@ def multi_goal_q_learning(env, alpha=0.1, gamma=0.99, epsilon=0.1, num_episodes=
     return episode_lengths
 
 def multi_goal_sarsa(env, alpha=0.1, gamma=0.99, epsilon=0.1, num_episodes=500):
-    """Sarsa con actualización multi-goal para un solo run"""
+
     episode_lengths = np.zeros(num_episodes)
     action_list = list(env.action_space)
     action_size = len(action_list)
