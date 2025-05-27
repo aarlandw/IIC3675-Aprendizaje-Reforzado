@@ -52,12 +52,35 @@ class QLearning:
     
     
     
-    def learn(self, observation, action, reward, next_observation, done):
-        # TODO: Agrega acá la regla de aprendizaje de Q-Learning con una aproximación lineal
-        weights = self.__weights
-        q = self.__get_q_estimate(observation, action)
-        q_next = 0.0 if done else self.__get_q_estimate(next_observation, self.argmax(next_observation))
-        weights_next = weights + self.__alpha * (reward + self.__gamma * q_next - q) 
-        self.__weights = weights_next 
+    # def learn(self, observation, action, reward, next_observation, done):
+    #     # TODO: Agrega acá la regla de aprendizaje de Q-Learning con una aproximación lineal
+    #     weights = self.__weights
+    #     q = self.__get_q_estimate(observation, action)
+    #     q_next = 0.0 if done else self.__get_q_estimate(next_observation, self.argmax(next_observation))
+    #     weights_next = weights + self.__alpha * (reward + self.__gamma * q_next - q) 
+    #     self.__weights = weights_next 
         
+    def learn(self, observation, action, reward, next_observation, done):
+        """Update the weights using the Q-learning rule with linear function approximation."""
+
+        # Get the feature vector for (s, a)
+        phi = self.get_feature_vector(observation, action)
+
+        # Estimate current Q(s, a)
+        q = np.dot(self.weights, phi)
+
+        # Estimate max_a' Q(s', a') — unless done
+        if done:
+            q_next = 0.0
+        else:
+            best_next_action = self.argmax(next_observation)
+            q_next = self.get_q_estimate(next_observation, best_next_action)
+
+        # Compute TD error
+        td_error = reward + self.gamma * q_next - q
+
+        
+
+        # Gradient descent step: w ← w + α * δ * φ(s,a)
+        self.weights += self.alpha * td_error * phi
         
