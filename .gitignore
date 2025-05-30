@@ -1,3 +1,4 @@
 **/__pyache__/
 *.pyc
 *.DS_Store
+**/.vscode/
