@@ -1,7 +1,10 @@
 import plotly.express as px
 import numpy as np
 import polars as pl
+import os
 
+WIDTH = 900
+HEIGHT = WIDTH / 1.5
 
 df_sarsa = pl.read_csv("../../Data/taskA_sarsa_results.csv")
 df_q_learning = pl.read_csv("../../Data/taskA_q_learning_results.csv")
@@ -40,6 +43,8 @@ fig = px.line(
         "Episode Mean": "Average Episode Reward",
         "Algorithm": "Algorithm",
     },
-    
+    width=WIDTH,
+    height=HEIGHT,
 )
+fig.update_layout(template="plotly_white")
 fig.show()

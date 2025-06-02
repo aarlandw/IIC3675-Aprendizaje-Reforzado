@@ -13,6 +13,16 @@ JSON_PATH = "../Data/DQN_Trials/dqn_mountain_car_configs.json"
 MODEL_PATH = "../Models/DQN_Trials/"
 RESULT_PATH = "../Data/DQN_Trials/"
 
+# param_grid = {
+#     "learning_rate": [1e-3, 5e-4, 1e-4],
+#     "exploration_fraction": [0.1, 0.2, 0.3],
+#     "gamma": [0,8, 0,9 0.99],
+#     "net_arch": [
+#         [64, 64],
+#         [128, 128],
+#     ],
+# }
+
 param_grid = {
     "learning_rate": [1e-3, 5e-4, 1e-4],
     "exploration_fraction": [0.1, 0.2, 0.3],
