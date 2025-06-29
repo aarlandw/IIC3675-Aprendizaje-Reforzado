@@ -1,0 +1,155 @@
+[
+    {
+        "learning_rate": 0.0001,
+        "noise_sigma": 0.1,
+        "noise_mean": 0.0,
+        "buffer_size": 1000000.0,
+        "batch_size": 32,
+        "tau": 0.01,
+        "gamma": 1.0
+    },
+    {
+        "learning_rate": 0.0005,
+        "noise_sigma": 0.1,
+        "noise_mean": 0.2,
+        "buffer_size": 100000.0,
+        "batch_size": 32,
+        "tau": 0.01,
+        "gamma": 0.99
+    },
+    {
+        "learning_rate": 0.0005,
+        "noise_sigma": 0.1,
+        "noise_mean": 0.2,
+        "buffer_size": 10000.0,
+        "batch_size": 128,
+        "tau": 0.01,
+        "gamma": 0.95
+    },
+    {
+        "learning_rate": 0.0001,
+        "noise_sigma": 0.2,
+        "noise_mean": 0.1,
+        "buffer_size": 10000.0,
+        "batch_size": 32,
+        "tau": 0.01,
+        "gamma": 0.95
+    },
+    {
+        "learning_rate": 0.0005,
+        "noise_sigma": 0.3,
+        "noise_mean": 0.1,
+        "buffer_size": 100000.0,
+        "batch_size": 128,
+        "tau": 0.005,
+        "gamma": 0.95
+    },
+    {
+        "learning_rate": 0.001,
+        "noise_sigma": 0.1,
+        "noise_mean": 0.2,
+        "buffer_size": 10000.0,
+        "batch_size": 32,
+        "tau": 0.001,
+        "gamma": 1.0
+    },
+    {
+        "learning_rate": 0.0001,
+        "noise_sigma": 0.2,
+        "noise_mean": 0.2,
+        "buffer_size": 100000.0,
+        "batch_size": 256,
+        "tau": 0.001,
+        "gamma": 0.99
+    },
+    {
+        "learning_rate": 0.001,
+        "noise_sigma": 0.1,
+        "noise_mean": 0.2,
+        "buffer_size": 10000.0,
+        "batch_size": 32,
+        "tau": 0.001,
+        "gamma": 0.95
+    },
+    {
+        "learning_rate": 0.001,
+        "noise_sigma": 0.2,
+        "noise_mean": 0.2,
+        "buffer_size": 1000000.0,
+        "batch_size": 256,
+        "tau": 0.005,
+        "gamma": 1.0
+    },
+    {
+        "learning_rate": 0.0001,
+        "noise_sigma": 0.3,
+        "noise_mean": 0.0,
+        "buffer_size": 1000000.0,
+        "batch_size": 128,
+        "tau": 0.001,
+        "gamma": 0.95
+    },
+    {
+        "learning_rate": 0.001,
+        "noise_sigma": 0.1,
+        "noise_mean": 0.0,
+        "buffer_size": 1000000.0,
+        "batch_size": 64,
+        "tau": 0.001,
+        "gamma": 0.95
+    },
+    {
+        "learning_rate": 0.001,
+        "noise_sigma": 0.2,
+        "noise_mean": 0.2,
+        "buffer_size": 100000.0,
+        "batch_size": 128,
+        "tau": 0.01,
+        "gamma": 1.0
+    },
+    {
+        "learning_rate": 0.0001,
+        "noise_sigma": 0.3,
+        "noise_mean": 0.0,
+        "buffer_size": 10000.0,
+        "batch_size": 32,
+        "tau": 0.001,
+        "gamma": 0.99
+    },
+    {
+        "learning_rate": 0.001,
+        "noise_sigma": 0.3,
+        "noise_mean": 0.2,
+        "buffer_size": 1000000.0,
+        "batch_size": 128,
+        "tau": 0.001,
+        "gamma": 0.99
+    },
+    {
+        "learning_rate": 0.001,
+        "noise_sigma": 0.3,
+        "noise_mean": 0.0,
+        "buffer_size": 10000.0,
+        "batch_size": 256,
+        "tau": 0.001,
+        "gamma": 0.99
+    },
+    {
+        "learning_rate": 0.001,
+        "noise_sigma": 0.2,
+        "noise_mean": 0.0,
+        "buffer_size": 1000000.0,
+        "batch_size": 64,
+        "tau": 0.001,
+        "gamma": 0.99
+    },
+    {
+        "learning_rate": 0.0001,
+        "noise_sigma": 0.2,
+        "noise_mean": 0.0,
+        "buffer_size": 1000000.0,
+        "batch_size": 64,
+        "tau": 0.001,
+        "gamma": 0.99
+    }
+]
