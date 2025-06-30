@@ -223,7 +223,7 @@ class droneEnv(gym.Env):
             self.x_pajaro2 -= 1
             self.y_pajaro2 = self.a_pajaro2*self.x_pajaro2+self.b_pajaro2
 
-            if self.x_pajaro2 < 0 or self.HEIGHT< self.x_pajaro2 or self.y_pajaro2 < 0 or self.WIDTH < self.y_pajaro2:
+            if self.x_pajaro2 < 0 or self.HEIGHT < self.x_pajaro2 or self.y_pajaro2 < 0 or self.WIDTH < self.y_pajaro2:
                 self.a_pajaro2, self.b_pajaro2 = choice([x * 0.1 for x in range(-10, 11)]),randrange(-800, 800)
                 self.x_pajaro2 = 799
                 self.y_pajaro2 = self.a_pajaro2*self.x_pajaro2+self.b_pajaro2

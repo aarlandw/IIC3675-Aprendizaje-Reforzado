@@ -1,3 +1,3 @@
-# IIC3675 Aprendizaje Reforzado: Tarea 4 - Métodos Aproximados
+# Proyecto de IIC3675 Aprendizaje Reforzado
 
 Skrrrt
