@@ -5,11 +5,8 @@ from tqdm import tqdm
 import optuna
 from stable_baselines3 import SAC
 from stable_baselines3.common.callbacks import BaseCallback
-from env import (
-    QuadcopterEnv,
-)  # Asegúrate de que este import apunte correctamente a tu archivo
+from env import QuadcopterEnv  # Asegúrate de que este import apunte correctamente a tu archivo
 import matplotlib.pyplot as plt
-
 # Configuración para entrenamiento nocturno
 N_TRIALS = 100  # Más trials para entrenamiento largo
 TOTAL_TIMESTEPS = 7_500_000  # Más timesteps por trial
@@ -18,7 +15,6 @@ BEST_PARAMS_FILE = "best_params_optuna.json"
 
 from tqdm import tqdm
 from stable_baselines3.common.callbacks import BaseCallback
-
 
 class RewardCallback(BaseCallback):
     def __init__(self, total_timesteps=100_000):
@@ -29,7 +25,6 @@ class RewardCallback(BaseCallback):
 
     def _on_training_start(self) -> None:
         from tqdm import tqdm
-
         self.pbar = tqdm(total=self.total_timesteps, desc="Entrenando", unit="step")
 
     def _on_step(self) -> bool:
@@ -43,7 +38,6 @@ class RewardCallback(BaseCallback):
     def _on_training_end(self) -> None:
         if self.pbar:
             self.pbar.close()
-
 
 # Función para evaluar el modelo entrenado
 def evaluate_model(model, env, n_episodes=EVAL_EPISODES):
@@ -60,23 +54,24 @@ def evaluate_model(model, env, n_episodes=EVAL_EPISODES):
         rewards.append(episode_reward)
     return np.mean(rewards)
 
-
 # Función objetivo de Optuna
 def objective(trial):
     params = {
         "gamma": trial.suggest_float("gamma", 0.95, 0.99),
         "learning_rate": trial.suggest_float("learning_rate", 1e-4, 3e-4),
-        "buffer_size": trial.suggest_categorical(
-            "buffer_size", [10_000, 50_000, 100_000]
-        ),
+        "buffer_size": trial.suggest_categorical("buffer_size", [10_000, 50_000, 100_000]),
         "tau": trial.suggest_categorical("tau", [0.005, 0.01]),
-        "batch_size": trial.suggest_categorical(
-            "batch_size", [64, 128]
-        ),  # Good for regular SAC
+        "batch_size": trial.suggest_categorical("batch_size", [64, 128]),  # Good for regular SAC
     }
 
     env = QuadcopterEnv()
-    model = SAC("MlpPolicy", env, verbose=0, tensorboard_log="./logs/optuna/", **params)
+    model = SAC(
+        "MlpPolicy",
+        env,
+        verbose=0,
+        tensorboard_log="./logs/optuna/",
+        **params
+    )
 
     callback = RewardCallback()
     model.learn(total_timesteps=TOTAL_TIMESTEPS, callback=callback)
@@ -106,14 +101,12 @@ def objective(trial):
     print(f" Parámetros usados: {json.dumps(params)}\n")
 
     return mean_reward
-
-
 # Ejecutar la optimización
 def optimize_hyperparameters():
     study = optuna.create_study(
         direction="maximize",
         sampler=optuna.samplers.TPESampler(),
-        pruner=optuna.pruners.MedianPruner(),
+        pruner=optuna.pruners.MedianPruner()
     )
 
     study.optimize(objective, n_trials=N_TRIALS, show_progress_bar=True)
@@ -125,10 +118,8 @@ def optimize_hyperparameters():
 
     return study.best_params
 
-
 def plot_best_model_rewards():
     import matplotlib.pyplot as plt
-
     with open("best_episode_rewards.json", "r") as f:
         rewards = json.load(f)
     with open("best_params_for_plot.json", "r") as f:
@@ -155,9 +146,7 @@ if __name__ == "__main__":
         print("\n Entrenamiento interrumpido por el usuario.")
 
         # Si hay recompensas parciales, intentamos graficarlas
-        if os.path.exists("best_episode_rewards.json") and os.path.exists(
-            "best_params_for_plot.json"
-        ):
+        if os.path.exists("best_episode_rewards.json") and os.path.exists("best_params_for_plot.json"):
             print(" Mostrando gráfica con resultados parciales...")
             plot_best_model_rewards()
         else:
