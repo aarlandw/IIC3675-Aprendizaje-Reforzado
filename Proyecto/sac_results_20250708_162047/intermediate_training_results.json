@@ -1,0 +1,11 @@
+{
+  "metadata": {
+    "total_episodes": 230,
+    "total_timesteps": 10000,
+    "training_time": "0:02:18.303376",
+    "best_reward": 179.532588,
+    "average_reward": -887.7873449608695,
+    "final_100_avg": -818.72024497
+  },
+  "data": {
+    "episode": 
